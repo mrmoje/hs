@@ -1,0 +1,90 @@
+---
+hostname: "{{ inventory_hostname_short }}"
+domain_name: "{{ hostname }}.{{ domain }}"
+fqdn: "{{ hostname }}.{{ domain }}"
+
+apticron_notification_address: "apticron_update_notifications@{{ domain_name }}"
+
+postfix_smarthost: "[nowhere]:587"
+postfix_smarthost_user: "kili"
+postfix_smarthost_pw: "{{ lookup('password', inventory_dir + '/creds/postfix_smarthost_pw') }}"
+
+root_mail_forward: "system_mail@{{ domain_name }}"
+
+horizon_dashboard_rabbit_password: "{{ lookup('password', inventory_dir + '/creds/horizon_dashboard_rabbit_password') }}"
+horizon_dashboard_db_password: "{{ lookup('password', inventory_dir + '/creds/horizon_dashboard_db_password') }}"
+horizon_dashboard_rabbit_user: "horizon_dashboard"
+horizon_dashboard_rabbit_vhost: "/horizon_dashboard"
+
+newrelic_license_key: "{{ lookup('password', inventory_dir + '/creds/newrelic_license_key') }}"
+newrelic_config_path: "/etc/openstack-dashboard"
+
+ssh_pubkeys: "inventories/keys/ssh_public_keys"
+ssh_authorized_keys: [
+  "{{ lookup('file', ssh_pubkeys + '/j') }}",
+]
+
+stackmonkey_user_id: "{{ lookup('password', inventory_dir + '/creds/stackmonkey_user_id') }}"
+
+external_ntp_host: pool.ntp.org
+openstack_region: hstack
+
+global_log_verbose: False
+global_log_debug: False
+
+openstack_repositories:
+  - cloud-archive:liberty
+
+ntp_host: "{{ hostvars[groups['ntpserver'][0]]|find_ip(management_network) }}"
+
+graphite_basic_auth_password: "{{ lookup('password', inventory_dir + '/creds/graphite_basic_auth_password') }}"
+
+mysql_host: "{{ hostvars[groups['mysql'][0]]|find_ip(management_network) }}"
+mysql_root_password: "{{ lookup('password', inventory_dir + '/creds/mysql_root_password') }}"
+
+mongodb_host: "{{ hostvars[groups['mongodb'][0]]|find_ip(management_network) }}"
+
+rabbit_host: "{{ hostvars[groups['rabbitmq'][0]]|find_ip(management_network) }}"
+
+keystone_endpoint_host: "{{ hostvars[groups['keystone'][0]]|find_ip(management_network) }}"
+keystone_internal_url: http://{{ keystone_endpoint_host }}:5000/v2.0
+keystone_admin_url: http://{{ keystone_endpoint_host }}:35357/v2.0
+keystone_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/keystone/v2.0"
+
+keystone_admin_token: "{{ lookup('password', inventory_dir + '/creds/keystone_admin_token') }}"
+
+glance_endpoint_host: "{{ hostvars[groups['glance'][0]]|find_ip(management_network) }}"
+glance_internal_url: http://{{ glance_endpoint_host }}:9292
+glance_admin_url: "{{ glance_internal_url }}"
+glance_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/glance"
+
+swift_endpoint_host: "{{ hostvars[groups['swift-proxy'][0]]|find_ip(management_network) }}"
+swift_internal_url: http://{{ swift_endpoint_host }}:8888/v1/AUTH_%(tenant_id)s
+swift_admin_url: http://{{ swift_endpoint_host }}:8888/v1
+swift_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/swift/v1/AUTH_%(tenant_id)s"
+
+cinder_endpoint_host: "{{ hostvars[groups['cinder-controller'][0]]|find_ip(management_network) }}"
+cinder_internal_url: http://{{ cinder_endpoint_host }}:8776/v1/%(tenant_id)s
+cinder_admin_url: "{{ cinder_internal_url }}"
+cinder_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/v1/cinder/%(tenant_id)s"
+
+cinderv2_internal_url: http://{{ cinder_endpoint_host }}:8776/v2/%(tenant_id)s
+cinderv2_admin_url: "{{ cinderv2_internal_url }}"
+cinderv2_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/v2/cinder/%(tenant_id)s"
+
+metadata_proxy_shared_secret: "{{ lookup('password', inventory_dir + '/creds/metadata_proxy_shared_secret') }}"
+
+admin_password: "{{ lookup('password', inventory_dir + '/creds/admin_password') }}"
+
+swift_mysql_password: "{{ lookup('password', inventory_dir + '/creds/swift_mysql_password') }}"
+swift_identity_password: "{{ lookup('password', inventory_dir + '/creds/swift_identity_password') }}"
+
+glance_mysql_password: "{{ lookup('password', inventory_dir + '/creds/glance_mysql_password')}}"
+glance_identity_password: "{{ lookup('password', inventory_dir + '/creds/glance_identity_password') }}"
+glance_rabbit_password: "{{ lookup('password', inventory_dir + '/creds/glance_rabbit_password') }}"
+
+cinder_mysql_password: "{{ lookup('password', inventory_dir + '/creds/cinder_mysql_password') }}"
+cinder_identity_password: "{{ lookup('password', inventory_dir + '/creds/cinder_identity_password') }}"
+cinder_rabbit_password: "{{ lookup('password', inventory_dir + '/creds/cinder_rabbit_password') }}"
+
+openstack_rabbit_password: "{{ lookup('password', inventory_dir + '/creds/openstack_rabbit_password') }}"
