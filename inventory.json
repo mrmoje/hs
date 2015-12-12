@@ -1,0 +1,97 @@
+{
+    "hstack": {
+        "common": {
+            "all": {
+                "vars": {
+                    "domain": "hstack",
+                    "promptcolor": 1,
+                    "env": "hstack",
+                    "ansible_ssh_user": "root"
+                }
+            }
+        }
+    },
+    "common": {
+        "all": {
+            "vars": {
+                "domain": "local",
+                "promptcolor": 7,
+                "env": "localhost",
+                "env_name": "localhost",
+                "ansible_sudo": "yes",
+                "ansible_ssh_user": "vagrant",
+                "ansible_ssh_private_key_file": "~/.vagrant.d/insecure_private_key",
+                "api_network": "10.0.0.0/24",
+                "public_domain": "10.1.0.5",
+                "pub_url_proto": "http",
+                "horizon_min_loglevel": "INFO",
+                "external_ntp_host": "uk.pool.ntp.org",
+                "management_network": "10.0.0.0/24",
+                "api_network": "10.1.0.0/16",
+                "external_network_name": "public",
+                "public_web_address": "10.1.0.5",
+                "public_api_address": "10.1.0.5",
+                "graphite_carbon_udp_endpoint": "127.0.0.1",
+                "graphite_web_port": 1281,
+
+                "public_network_ifname": "eth1",
+                "public_network": "10.1.0.0",
+                "public_network_mask": "255.255.0.0",
+                "public_network_bcast": "10.1.255.255",
+                "public_network_address": "10.1.0.5",
+                "public_dns_nameservers": "8.8.8.8 8.8.4.4",
+                "public_network_gw": "10.1.0.1",
+                "management_control_network_ifname": "eth2:0",
+                "management_control_network": "10.0.0.0",
+                "management_control_network_mask": "255.255.255.0",
+                "management_control_network_bcast": "10.0.0.255",
+                "management_control_network_address": "10.0.0.11",
+                "management_bstore_network_ifname": "eth4:0",
+                "management_bstore_network": "10.0.0.0",
+                "management_bstore_network_mask": "255.255.255.0",
+                "management_bstore_network_bcast": "10.0.0.255",
+                "management_bstore_network_address": "10.0.0.41",
+                "management_ostore_network_ifname": "eth5:0",
+                "management_ostore_network": "10.0.0.0",
+                "management_ostore_network_mask": "255.255.255.0",
+                "management_ostore_network_bcast": "10.0.0.255",
+                "management_ostore_network_address": "10.0.0.51",
+                "collectd_monitored_network_interfaces": [
+                    "eth0",
+                    "eth1",
+                    "br-ex",
+                    "br-int",
+                    "br-tun"
+                ],
+                "collectd_monitored_disks": [
+                    "sda5",
+                    "sdb5",
+                    "md0",
+                    "md1",
+                    "md2",
+                    "md3"
+                ]
+            }
+        },
+        "mysql": {
+            "hosts": [
+                "hstack"
+            ]
+        },
+        "ntpserver": {
+            "hosts": [
+                "hstack"
+            ]
+        },
+        "keystone": {
+            "hosts": [
+                "hstack"
+            ]
+        },
+        "openstack": {
+            "children": [
+                "keystone"
+            ]
+        }
+    }
+}
