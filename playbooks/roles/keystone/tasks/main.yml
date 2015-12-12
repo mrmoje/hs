@@ -1,0 +1,4 @@
+---
+- include: mysql.yml
+- include: packages.yml
+- include: keystone.yml

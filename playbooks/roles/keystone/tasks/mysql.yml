@@ -1,0 +1,20 @@
+---
+- name: ensure keystone database is present
+  mysql_db:
+    name: keystone
+    #login_host: "{{ mysql_host }}"
+    #login_user: root
+    #login_password: "{{ mysql_root_password }}"
+
+- name: ensure keystone database user is present
+  mysql_user:
+    name: keystone
+    host: "{{ item }}"
+    password: "{{ keystone_mysql_password }}"
+    priv: keystone.*:ALL
+    #login_host: "{{ mysql_host }}"
+    #login_user: root
+    #login_password: "{{ mysql_root_password }}"
+  with_items:
+    - "%"
+    - localhost

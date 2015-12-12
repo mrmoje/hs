@@ -1,0 +1,19 @@
+---
+- name: Install Keystone related packages
+  apt:
+    pkg: "{{ item }}"
+    force: yes
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items:
+    - keystone
+    - apache2
+    - libapache2-mod-wsgi
+    - memcached
+    - python-memcache
+
+- name: ensure keystone sqlite is deleted
+  file:
+    dest: /var/lib/keystone/keystone.sqlite
+    state: absent

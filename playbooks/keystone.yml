@@ -1,0 +1,10 @@
+---
+- name: Install keystone identity service
+  hosts: keystone
+  sudo: True
+  gather_facts: True
+  tags:
+    - openstack
+  roles:
+    - openstack-common
+    - keystone
