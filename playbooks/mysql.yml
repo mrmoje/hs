@@ -1,0 +1,11 @@
+---
+- name: Install Configure MySQL server
+  hosts: mysql
+  sudo: True
+  gather_facts: True
+  tags:
+    - openstack
+    - database
+  roles:
+    - mysql
+
