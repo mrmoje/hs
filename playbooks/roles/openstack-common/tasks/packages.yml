@@ -1,0 +1,38 @@
+---
+- name: soffwir properties python
+  apt:
+    pkg: "software-properties-common"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+
+- name: ensure needed repositories are present
+  command: apt-add-repository -y "{{ item }}"
+  with_items: openstack_repositories
+
+- name: enable universe repo
+  apt_repository:
+    repo: "{{ item }}"
+    update_cache: true
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+      - 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} universe'
+      - 'deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} universe'
+
+- name: Update cache for good measure
+  apt:
+    update_cache: yes
+
+- name: ensure basic packages are installed
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items:
+    - chrony
+    - python-openstackclient
+    - python-pymysql
+    - python-pymongo
+    - mongodb-clients
+    - bridge-utils

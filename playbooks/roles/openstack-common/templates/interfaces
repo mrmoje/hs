@@ -1,0 +1,32 @@
+auto lo
+iface lo inet loopback
+
+source /etc/network/interfaces.d/*.cfg
+
+auto {{ public_network_ifname }}
+iface {{ public_network_ifname }} inet static
+  address {{ public_network_address }}
+  network {{ public_network }}
+  netmask {{ public_network_mask }}
+  broadcast {{ public_network_bcast }}
+
+auto {{ management_control_network_ifname }}
+iface {{ management_control_network_ifname }} inet static
+  address {{ management_control_network_address }}
+  network {{ management_control_network }}
+  netmask {{ management_control_network_mask }}
+  broadcast {{ management_control_network_bcast }}
+
+auto {{ management_bstore_network_ifname }}
+iface {{ management_bstore_network_ifname }} inet static
+  address {{ management_bstore_network_address }}
+  network {{ management_bstore_network }}
+  netmask {{ management_bstore_network_mask }}
+  broadcast {{ management_bstore_network_bcast }}
+
+auto {{ management_ostore_network_ifname }}
+iface {{ management_ostore_network_ifname }} inet static
+  address {{ management_ostore_network_address }}
+  network {{ management_ostore_network }}
+  netmask {{ management_ostore_network_mask }}
+  broadcast {{ management_ostore_network_bcast }}

@@ -1,0 +1,70 @@
+---
+- name: ensure chrony server is stopped
+  service:
+    name: chrony
+    state: stopped
+
+- name: install chrony.conf
+  template:
+    src: chrony.conf
+    dest: /etc/chrony/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: set clocks to public ntp server
+  command: ntpdate {{ external_ntp_host }}
+  ignore_errors: yes
+  register: ntpdate_result
+  until: ntpdate_result|success
+  retries: 5
+  delay: 5
+
+- name: make sure chrony server is started and enabled
+  service:
+    name: chrony
+    state: restarted
+    enabled: yes
+  when: "'ntpserver' in group_names"
+
+- name: set clocks to local chrony server
+  command: ntpdate {{ ntp_host }}
+  register: ntpdate_result
+  when: "'ntpserver' not in group_names"
+  until: ntpdate_result|success
+  retries: 5
+  delay: 5
+
+- name: save system clock to hardware
+  command: hwclock --systohc
+
+- name: make sure chrony is started and enabled everywhere
+  service:
+    name: chrony
+    state: restarted
+    enabled: yes
+
+- name: copy network configuration
+  template:
+    src: interfaces
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
+
+# - name: reboot
+#   command: /sbin/reboot
+
+# - name: waiting for server to come back
+#   local_action: wait_for host={{ ansible_ssh_host | default(inventory_hostname) }} state=started port=22 delay=30 timeout=300 connect_timeout=15
+
+- name: ensure rabbitmq openstack user is present
+  rabbitmq_user:
+    user: openstack
+    password: "{{ openstack_rabbit_password }}"
+    vhost: /
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    state: present
+    force: yes

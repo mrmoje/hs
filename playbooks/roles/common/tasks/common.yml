@@ -1,0 +1,60 @@
+---
+- name: ensure basic packages are installed
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items:
+    - vim
+    - telnet
+    - tcpdump
+    - traceroute
+    - strace
+    - man-db
+    - iptables
+    - lsof
+    - mtr
+    - curl
+    - sysstat
+    - git
+    - python-software-properties
+    - rsync
+
+- name: set editor to use vim.basic
+  command: update-alternatives --set editor /usr/bin/vim.basic
+
+- name: copy hostname file
+  template:
+    src: hostname
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy hosts file template
+  template:
+    src: hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+
+- name: set hostname
+  command: /bin/hostname "{{ hostname }}"
+
+- name: copy sshd_config
+  template:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    owner: root
+    mode: 0644
+
+- name: ensure needed services are started and start on boot
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items:
+    - ssh
