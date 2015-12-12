@@ -6,7 +6,43 @@
                     "domain": "hstack",
                     "promptcolor": 1,
                     "env": "hstack",
-                    "ansible_ssh_user": "root"
+                    "env_name": "hstack",
+                    "ansible_ssh_user": "root",
+                    "api_network": "192.168.86.0/24",
+                    "public_domain": "192.168.86.11",
+                    "pub_url_proto": "http",
+                    "horizon_min_loglevel": "INFO",
+                    "external_ntp_host": "uk.pool.ntp.org",
+                    "management_network": "10.0.0.0/24",
+                    "api_network": "192.168.86.0/24",
+                    "external_network_name": "public",
+                    "public_web_address": "192.168.86.11",
+                    "public_api_address": "192.168.86.11",
+                    "graphite_carbon_udp_endpoint": "127.0.0.1",
+                    "graphite_web_port": 1281,
+
+                    "public_network_ifname": "eth0",
+                    "public_network": "192.168.86.0",
+                    "public_network_mask": "255.255.255.0",
+                    "public_network_bcast": "192.168.86.255",
+                    "public_network_address": "192.168.86.11",
+                    "public_dns_nameservers": "8.8.8.8 8.8.4.4",
+                    "public_network_gw": "192.168.86.1",
+                    "management_control_network_ifname": "eth1:0",
+                    "management_control_network": "10.0.0.0",
+                    "management_control_network_mask": "255.255.255.0",
+                    "management_control_network_bcast": "10.0.0.255",
+                    "management_control_network_address": "10.0.0.11",
+                    "management_bstore_network_ifname": "eth1:1",
+                    "management_bstore_network": "10.0.0.0",
+                    "management_bstore_network_mask": "255.255.255.0",
+                    "management_bstore_network_bcast": "10.0.0.255",
+                    "management_bstore_network_address": "10.0.0.41",
+                    "management_ostore_network_ifname": "eth1:2",
+                    "management_ostore_network": "10.0.0.0",
+                    "management_ostore_network_mask": "255.255.255.0",
+                    "management_ostore_network_bcast": "10.0.0.255",
+                    "management_ostore_network_address": "10.0.0.51"
                 }
             }
         }
@@ -78,6 +114,11 @@
                 "hstack"
             ]
         },
+        "rabbitmq": {
+            "hosts": [
+                "hstack"
+            ]
+        },
         "ntpserver": {
             "hosts": [
                 "hstack"
@@ -86,6 +127,27 @@
         "keystone": {
             "hosts": [
                 "hstack"
+            ]
+        },
+        "glance": {
+            "hosts": [
+                "hstack"
+            ]
+        },
+        "cinder-storage": {
+            "hosts": [
+                "hstack"
+            ]
+        },
+        "cinder-controller": {
+            "hosts": [
+                "hstack"
+            ]
+        },
+        "cinder": {
+            "children": [
+                "cinder-storage",
+                "cinder-controller"
             ]
         },
         "openstack": {

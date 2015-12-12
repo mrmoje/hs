@@ -71,3 +71,14 @@
     tenant: admin
     user: admin
     role: Member
+
+- name: Copy admin rcfiles
+  template:
+    src: "{{ item }}"
+    dest: /root/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - admin.openrc
+    - token.openrc
