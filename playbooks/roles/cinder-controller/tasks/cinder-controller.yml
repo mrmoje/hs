@@ -1,0 +1,10 @@
+---
+- name: ensure database is synced
+  command: /usr/bin/cinder-manage db sync
+
+- name: ensure cinder-controller services are started and enabled
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items: services

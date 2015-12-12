@@ -1,0 +1,11 @@
+---
+services:
+  - cinder-api
+  - cinder-scheduler
+
+packages:
+  - cinder-api
+  - cinder-scheduler
+  - python-cinderclient
+
+cinder_role: "controller"

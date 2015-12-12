@@ -1,0 +1,4 @@
+---
+- include: mysql.yml
+- include: keystone.yml
+- include: cinder-controller.yml

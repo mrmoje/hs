@@ -1,0 +1,17 @@
+---
+- name: ensure services are stopped
+  service:
+    name: "{{ item }}"
+    state: stopped
+  with_items: services
+
+- name: update configuration files from templates
+  template:
+    src: "{{ item }}"
+    dest: "/etc/cinder/{{ item }}"
+    owner: cinder
+    group: cinder
+    mode: 0640
+  with_items:
+    - cinder.conf
+    - api-paste.ini

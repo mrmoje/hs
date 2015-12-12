@@ -1,0 +1,11 @@
+---
+services:
+  - cinder-volume
+  - tgt
+
+packages:
+  - cinder-volume
+  - python-mysqldb
+  - tgt
+
+cinder_role: "storage"

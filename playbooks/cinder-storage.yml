@@ -1,0 +1,9 @@
+---
+- name: Install cinder block storage serveice
+  hosts: cinder-storage
+  sudo: True
+  gather_facts: True
+  tags:
+    - openstack
+  roles:
+    - cinder-storage

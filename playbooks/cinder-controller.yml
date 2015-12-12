@@ -1,0 +1,11 @@
+---
+- name: Install cinder block storage serveice
+  hosts: cinder-controller
+  sudo: True
+  gather_facts: True
+  tags:
+    - openstack
+  roles:
+    - openstack-common
+    - keystone
+    - cinder-controller
