@@ -17,17 +17,22 @@
                     "api_network": "192.168.86.0/24",
                     "external_network_name": "public",
                     "public_web_address": "192.168.86.11",
-                    "public_api_address": "192.168.86.11",
+                    "public_api_address": "192.168.86.12",
                     "graphite_carbon_udp_endpoint": "127.0.0.1",
                     "graphite_web_port": 1281,
 
-                    "public_network_ifname": "eth0",
+                    "public_network_ifname": "eth0:0",
                     "public_network": "192.168.86.0",
                     "public_network_mask": "255.255.255.0",
                     "public_network_bcast": "192.168.86.255",
                     "public_network_address": "192.168.86.11",
                     "public_dns_nameservers": "8.8.8.8 8.8.4.4",
                     "public_network_gw": "192.168.86.1",
+                    "public_api_ifname": "eth0:1",
+                    "public_api_network": "192.168.86.0",
+                    "public_api_network_mask": "255.255.255.0",
+                    "public_api_network_bcast": "192.168.86.255",
+                    "public_api_address": "192.168.86.12",
                     "management_control_network_ifname": "eth1:0",
                     "management_control_network": "10.0.0.0",
                     "management_control_network_mask": "255.255.255.0",
@@ -70,13 +75,18 @@
                 "graphite_carbon_udp_endpoint": "127.0.0.1",
                 "graphite_web_port": 1281,
 
-                "public_network_ifname": "eth1",
+                "public_network_ifname": "eth1:0",
                 "public_network": "10.1.0.0",
                 "public_network_mask": "255.255.0.0",
                 "public_network_bcast": "10.1.255.255",
                 "public_network_address": "10.1.0.5",
                 "public_dns_nameservers": "8.8.8.8 8.8.4.4",
                 "public_network_gw": "10.1.0.1",
+                "public_api_ifname": "eth1:1",
+                "public_api_network": "10.1.0.0",
+                "public_api_network_mask": "255.255.0.0",
+                "public_api_network_bcast": "10.1.255.255",
+                "public_api_address": "10.1.0.6",
                 "management_control_network_ifname": "eth2:0",
                 "management_control_network": "10.0.0.0",
                 "management_control_network_mask": "255.255.255.0",
@@ -91,22 +101,7 @@
                 "management_ostore_network": "10.0.0.0",
                 "management_ostore_network_mask": "255.255.255.0",
                 "management_ostore_network_bcast": "10.0.0.255",
-                "management_ostore_network_address": "10.0.0.51",
-                "collectd_monitored_network_interfaces": [
-                    "eth0",
-                    "eth1",
-                    "br-ex",
-                    "br-int",
-                    "br-tun"
-                ],
-                "collectd_monitored_disks": [
-                    "sda5",
-                    "sdb5",
-                    "md0",
-                    "md1",
-                    "md2",
-                    "md3"
-                ]
+                "management_ostore_network_address": "10.0.0.51"
             }
         },
         "mysql": {
@@ -124,35 +119,19 @@
                 "hstack"
             ]
         },
-        "keystone": {
+        "controller": {
             "hosts": [
                 "hstack"
             ]
         },
-        "glance": {
+        "compute": {
             "hosts": [
                 "hstack"
             ]
         },
-        "cinder-storage": {
+        "storage": {
             "hosts": [
                 "hstack"
-            ]
-        },
-        "cinder-controller": {
-            "hosts": [
-                "hstack"
-            ]
-        },
-        "cinder": {
-            "children": [
-                "cinder-storage",
-                "cinder-controller"
-            ]
-        },
-        "openstack": {
-            "children": [
-                "keystone"
             ]
         }
     }
