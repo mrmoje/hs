@@ -1,0 +1,5 @@
+---
+- include: nginx.yml
+- include: keystone.yml
+- include: horizon.yml
+- include: cinder.yml
