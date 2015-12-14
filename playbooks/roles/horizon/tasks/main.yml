@@ -1,0 +1,33 @@
+
+- name: Ensure Horizon Opentack Dash is installed
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items:
+    - openstack-dashboard
+
+- name: ensure ubuntu theme is removed
+  apt:
+    pkg: openstack-dashboard-ubuntu-theme
+    state: absent
+    purge: yes
+
+- name: Copy horizon configuration
+  template:
+    src: "{{ item }}"
+    dest: "/etc/openstack-dashboard/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - local_settings.py
+
+- name: Ensure Apache is Restarted
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items:
+    - apache2

@@ -1,0 +1,9 @@
+---
+- name: Install horizon dash
+  hosts: controller
+  sudo: True
+  gather_facts: True
+  tags:
+    - openstack
+  roles:
+    - horizon
