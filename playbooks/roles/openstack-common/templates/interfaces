@@ -9,6 +9,15 @@ iface {{ public_network_ifname }} inet static
   network {{ public_network }}
   netmask {{ public_network_mask }}
   broadcast {{ public_network_bcast }}
+  gateway {{ public_network_gw }}
+  dns-nameservers {{ public_dns_nameservers }}
+
+auto {{ public_api_ifname }}
+iface {{ public_api_ifname }} inet static
+  address {{ public_api_address }}
+  network {{ public_api_network }}
+  netmask {{ public_api_network_mask }}
+  broadcast {{ public_api_network_bcast }}
 
 auto {{ management_control_network_ifname }}
 iface {{ management_control_network_ifname }} inet static
