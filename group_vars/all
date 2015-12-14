@@ -46,24 +46,25 @@ mongodb_host: "{{ hostvars[groups['mongodb'][0]]|find_ip(management_network) }}"
 
 rabbit_host: "{{ hostvars[groups['rabbitmq'][0]]|find_ip(management_network) }}"
 
-keystone_endpoint_host: "{{ hostvars[groups['keystone'][0]]|find_ip(management_network) }}"
+controller_endpoint_host: "{{ hostvars[groups['controller'][0]]|find_ip(management_network) }}"
+keystone_endpoint_host: "{{ controller_endpoint_host }}"
 keystone_internal_url: http://{{ keystone_endpoint_host }}:5000/v2.0
 keystone_admin_url: http://{{ keystone_endpoint_host }}:35357/v2.0
 keystone_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/keystone/v2.0"
 
 keystone_admin_token: "{{ lookup('password', inventory_dir + '/creds/keystone_admin_token') }}"
 
-glance_endpoint_host: "{{ hostvars[groups['glance'][0]]|find_ip(management_network) }}"
+glance_endpoint_host: "{{ controller_endpoint_host }}"
 glance_internal_url: http://{{ glance_endpoint_host }}:9292
 glance_admin_url: "{{ glance_internal_url }}"
 glance_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/glance"
 
-swift_endpoint_host: "{{ hostvars[groups['swift-proxy'][0]]|find_ip(management_network) }}"
+swift_endpoint_host: "{{ controller_endpoint_host }}"
 swift_internal_url: http://{{ swift_endpoint_host }}:8888/v1/AUTH_%(tenant_id)s
 swift_admin_url: http://{{ swift_endpoint_host }}:8888/v1
 swift_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/swift/v1/AUTH_%(tenant_id)s"
 
-cinder_endpoint_host: "{{ hostvars[groups['cinder-controller'][0]]|find_ip(management_network) }}"
+cinder_endpoint_host: "{{ controller_endpoint_host }}"
 cinder_internal_url: http://{{ cinder_endpoint_host }}:8776/v1/%(tenant_id)s
 cinder_admin_url: "{{ cinder_internal_url }}"
 cinder_public_url: "{{ pub_url_proto }}://{{ public_api_address }}/v1/cinder/%(tenant_id)s"
@@ -88,3 +89,107 @@ cinder_identity_password: "{{ lookup('password', inventory_dir + '/creds/cinder_
 cinder_rabbit_password: "{{ lookup('password', inventory_dir + '/creds/cinder_rabbit_password') }}"
 
 openstack_rabbit_password: "{{ lookup('password', inventory_dir + '/creds/openstack_rabbit_password') }}"
+
+api_upstreams:
+- name: 'keystone'
+  port: '5000'
+
+- name: 'ceilometer'
+  port: '8777'
+
+- name: 'neutron'
+  port: '9696'
+
+- name: 'heat'
+  port: '8004'
+
+- name: 'cfn'
+  port: '8000'
+
+- name: 'swift'
+  port: '8888'
+
+- name: 'cinder'
+  port: '8776'
+
+- name: 'glance'
+  port: '9292'
+
+- name: 'nova'
+  port: '8774'
+
+- name: 'ec2'
+  port: '8773'
+
+api_locations:
+  - pattern: '/keystone'
+    rewrite: '^/keystone(.*)$ $1'
+    upstream: 'keystone'
+
+  - pattern: '/ceilometer'
+    rewrite: '^/ceilometer(.*)$ $1'
+    upstream: 'ceilometer'
+
+  - pattern: '/neutron'
+    rewrite: '^/neutron(.*)$ $1'
+    upstream: 'neutron'
+
+  - pattern: '/heat'
+    rewrite: '^/heat(.*)$ $1'
+    upstream: 'heat'
+
+  - pattern: '/cfn'
+    rewrite: '^/cfn(.*)$ $1'
+    upstream: 'cfn'
+
+  - pattern: '/swift'
+    rewrite: '^/swift(.*)$ $1'
+    upstream: 'swift'
+
+  - pattern: '/glance'
+    rewrite: '^/glance(.*)$ $1'
+    upstream: 'glance'
+
+  - pattern: '/nova'
+    rewrite: '^/nova(.*)$ $1'
+    upstream: 'nova'
+
+  - pattern: '/ec2'
+    rewrite: '^/ec2(.*)$ $1'
+    upstream: 'ec2'
+
+# these patterns are all an extremely ugly workaround for the python-glanceclient
+# bug that makes it ignore the endpoint url given by keystone
+###
+  - pattern: '/project/images'
+    rewrite: ''
+    upstream: 'glance'
+
+  - pattern: '/v1/images'
+    rewrite: ''
+    upstream: 'glance'
+
+  - pattern: '/v2/schemas/image'
+    rewrite: ''
+    upstream: 'glance'
+
+  - pattern: '/v2/schemas/member'
+    rewrite: ''
+    upstream: 'glance'
+
+  - pattern: '/v2/images'
+    rewrite: ''
+    upstream: 'glance'
+###
+
+# due to a bug, the python-cinderclient requires the version number to be the
+# first part of the url, so it can't be /cinder
+###
+  - pattern: '/v1/cinder'
+    rewrite: '^/v1/cinder(.*)$ /v1$1'
+    upstream: 'cinder'
+
+  - pattern: '/v2/cinder'
+    rewrite: '^/v2/cinder(.*)$ /v2$1'
+    upstream: 'cinder'
+
