@@ -1,4 +1,13 @@
 ---
+- name: restart keystone
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: yes
+  with_items:
+    - keystone
+    - apache2
+
 - name: update configuration files from templates
   template:
     src: keystone.conf
@@ -12,9 +21,12 @@
 
 - name: restart keystone
   service:
-    name: keystone
+    name: "{{ item }}"
     state: restarted
     enabled: yes
+  with_items:
+    - keystone
+    - apache2
 
 # keystone seems to take a while...
 - name: wait for keystone to come back up
@@ -71,6 +83,14 @@
     tenant: admin
     user: admin
     role: Member
+
+- name: create user role and associate it with admin user
+  keystone_user:
+    endpoint: "{{ keystone_admin_url }}"
+    token: "{{ keystone_admin_token }}"
+    tenant: admin
+    user: admin
+    role: user
 
 - name: Copy admin rcfiles
   template:

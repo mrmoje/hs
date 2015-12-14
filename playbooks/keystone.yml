@@ -1,6 +1,6 @@
 ---
 - name: Install keystone identity service
-  hosts: keystone
+  hosts: controller
   sudo: True
   gather_facts: True
   tags:
