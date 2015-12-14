@@ -8,10 +8,18 @@
     cache_valid_time: 600
   with_items:
     - keystone
-    - apache2
     - libapache2-mod-wsgi
     - memcached
     - python-memcache
+    - apache2
+
+- name: Keep apache off port 80 and 443
+  template:
+    src: apache_ports.conf
+    dest: /etc/apache2/ports.conf
+    owner: root
+    group: root
+    mode: 0644
 
 - name: ensure keystone sqlite is deleted
   file:
