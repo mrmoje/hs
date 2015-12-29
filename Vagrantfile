@@ -15,6 +15,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             :netmask => "255.255.0.0"
         machine.vm.network :private_network, ip: "10.0.0.11",
             :netmask => "255.255.0.0"
+        machine.vm.network :private_network, ip: "10.0.0.31",
+            :netmask => "255.255.0.0"
         machine.vm.network :private_network, ip: "10.0.0.41",
             :netmask => "255.255.0.0"
         machine.vm.network :private_network, ip: "10.0.0.51",
@@ -25,8 +27,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             o.ssh.insert_key = false
             o.vm.hostname = "hstack.local"
             v.customize ["modifyvm", :id, "--memory", 2048]
-            v.customize ["createhd", "--filename", disk1, "--size", 1024]
-            v.customize ["createhd", "--filename", disk2, "--size", 1024]
+            v.customize ["createhd", "--filename", disk1, "--size", 10240] if !File.exist?(disk1)
+            v.customize ["createhd", "--filename", disk2, "--size", 10240] if !File.exist?(disk2)
             v.customize ["storageattach", :id, "--storagectl", "SATAController",
                          "--port", 1, "--device", 0, "--type", "hdd",
                          "--medium", disk1]
