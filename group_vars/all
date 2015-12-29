@@ -39,7 +39,8 @@ ntp_host: "{{ hostvars[groups['ntpserver'][0]]|find_ip(management_network) }}"
 
 graphite_basic_auth_password: "{{ lookup('password', inventory_dir + '/creds/graphite_basic_auth_password') }}"
 
-mysql_host: "{{ hostvars[groups['mysql'][0]]|find_ip(management_network) }}"
+#mysql_host: "{{ hostvars[groups['mysql'][0]]|find_ip(management_network) }}"
+mysql_host: "{{ management_control_network_address }}"
 mysql_root_password: "{{ lookup('password', inventory_dir + '/creds/mysql_root_password') }}"
 
 mongodb_host: "{{ hostvars[groups['mongodb'][0]]|find_ip(management_network) }}"
