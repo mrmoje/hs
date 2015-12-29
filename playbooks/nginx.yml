@@ -1,6 +1,6 @@
 ---
 - name: nginx
-  hosts: controller
+  hosts: nginx-frontend
   sudo: True
   gather_facts: True
   tags:
