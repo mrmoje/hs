@@ -1,4 +1,0 @@
----
-dependencies:
-  - openstack-common
-  - mysql

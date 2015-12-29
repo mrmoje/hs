@@ -1,5 +1,7 @@
 ---
 - include: nginx.yml
+- include: openstack-common.yml
 - include: keystone.yml
 - include: horizon.yml
 - include: cinder.yml
+- include: swift.yml

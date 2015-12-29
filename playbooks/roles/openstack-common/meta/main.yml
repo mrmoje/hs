@@ -4,3 +4,4 @@ dependencies:
   - mongodb
   - rabbitmq
   - postfix
+  - mysql

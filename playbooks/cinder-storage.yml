@@ -1,6 +1,6 @@
 ---
 - name: Install cinder block storage serveice
-  hosts: storage
+  hosts: block-storage
   sudo: True
   gather_facts: True
   tags:

@@ -71,7 +71,6 @@
                 "api_network": "10.1.0.0/16",
                 "external_network_name": "public",
                 "public_web_address": "10.1.0.5",
-                "public_api_address": "10.1.0.5",
                 "graphite_carbon_udp_endpoint": "127.0.0.1",
                 "graphite_web_port": 1281,
 
@@ -86,7 +85,7 @@
                 "public_api_network": "10.1.0.0",
                 "public_api_network_mask": "255.255.0.0",
                 "public_api_network_bcast": "10.1.255.255",
-                "public_api_address": "10.1.0.6",
+                "public_api_address": "10.1.0.5",
                 "management_control_network_ifname": "eth2:0",
                 "management_control_network": "10.0.0.0",
                 "management_control_network_mask": "255.255.255.0",
@@ -129,7 +128,27 @@
                 "hstack"
             ]
         },
-        "storage": {
+        "block-storage": {
+            "hosts": [
+                "hstack"
+            ],
+            "vars": {
+                "lvm_block_storage_devices": [
+                    "md1"
+                ]
+            }
+        },
+        "object-storage": {
+            "hosts": [
+                "hstack"
+            ],
+            "vars": {
+                "object_storage_devices": [
+                    "sdb3", "sdc3"
+                ]
+            }
+        },
+        "nginx-frontend": {
             "hosts": [
                 "hstack"
             ]
