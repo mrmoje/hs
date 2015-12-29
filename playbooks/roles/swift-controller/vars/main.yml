@@ -1,0 +1,17 @@
+---
+packages:
+  - swift
+  - swift-proxy
+  - python-swiftclient
+  - python-keystoneclient
+  - python-keystonemiddleware
+  - memcached
+  # - python-memcache
+  # - python-webob
+
+services:
+    - memcached
+    - swift-proxy
+
+config_files:
+  - proxy-server.conf

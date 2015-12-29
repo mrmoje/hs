@@ -1,0 +1,13 @@
+---
+- name: ensure packages are installed
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items: packages
+
+- name: ensure swift sqlite is deleted
+  file:
+    dest: "/var/lib/swift/swift.sqlite"
+    state: absent

@@ -1,0 +1,15 @@
+---
+- name: copy memcache config
+  template:
+    src: memcached.conf
+    dest: /etc/memcached.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: ensure services are started
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items: services

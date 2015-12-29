@@ -1,0 +1,15 @@
+---
+- name: gather swift info
+  hosts: controller
+  gather_facts: True
+  tags:
+    - openstack
+
+- name: Install swift object storage controller services
+  hosts: controller
+  sudo: True
+  gather_facts: True
+  tags:
+    - openstack
+  roles:
+    - swift-controller

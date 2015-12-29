@@ -1,0 +1,47 @@
+---
+- name: ensure services are stopped
+  service:
+    name: "{{ item }}"
+    state: stopped
+  with_items: services
+  ignore_errors: yes
+
+- name: create directories if not already there
+  file:
+    path: "{{ item }}"
+    owner: swift
+    group: swift
+    mode: 0750
+    state: directory
+  with_items: directories
+
+- name: create directories if not already there
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: 0750
+    state: directory
+  with_items:
+    - { path: /srv/node, owner: swift, group: swift }
+    - { path: /var/cache/swift, owner: swift, group: swift }
+    - { path: /etc/swift, owner: swift, group: swift }
+
+- name: copy common swift config file
+  template:
+    src: "{{ item }}"
+    dest: "/etc/swift/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - swift.conf
+
+- name: update task specific configuration files from templates
+  template:
+    src: "{{ item }}"
+    dest: "/etc/swift/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: config_files

@@ -1,0 +1,113 @@
+---
+- name: ensure rsync service is stopped
+  service:
+    name: rsync
+    state: stopped
+    enabled: yes
+
+- name: create filesystems on devices
+  filesystem:
+    dev: "/dev/{{ item }}"
+    fstype: xfs
+    opts: -i size=1024
+  with_items: "{{ object_storage_devices }}"
+
+- name: create object storage device mount points
+  file:
+    path: "/srv/node/{{ item }}"
+    owner: swift
+    group: swift
+    mode: 0750
+    state: directory
+  with_items: "{{ object_storage_devices }}"
+
+- name: mount object storage devices
+  mount:
+    name: "/srv/node/{{ item }}"
+    src: "/dev/{{ item }}"
+    fstype: xfs
+    opts: noatime,nodiratime,nobarrier,logbufs=8
+    state: mounted
+  with_items: "{{ object_storage_devices }}"
+
+- name: update rsyncd.conf from template
+  template:
+    src: rsyncd.conf
+    dest: /etc/rsyncd.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create account builder
+  command: sudo -u swift swift-ring-builder account.builder create 18 2 1
+           chdir=/etc/swift
+           creates=/etc/swift/account.builder
+
+- name: create account ring
+  command: sudo -u swift swift-ring-builder account.builder add r1z1-{{ management_ostore_network_address }}:6002R{{ management_ostore_network_address }}:6005/{{ item }} 100
+           chdir=/etc/swift
+  with_items: "{{ object_storage_devices }}"
+  ignore_errors: yes
+
+- name: rebalance account builder
+  command: sudo -u swift swift-ring-builder account.builder rebalance
+           chdir=/etc/swift
+  ignore_errors: yes
+
+- name: create container builder
+  command: sudo -u swift swift-ring-builder container.builder create 18 2 1
+           chdir=/etc/swift
+           creates=/etc/swift/container.builder
+
+- name: create container ring
+  command: sudo -u swift swift-ring-builder container.builder add r1z1-{{ management_ostore_network_address }}:6001R{{ management_ostore_network_address }}:6004/{{ item }} 100
+           chdir=/etc/swift
+  with_items: "{{ object_storage_devices }}"
+  ignore_errors: yes
+
+- name: rebalance container builder
+  command: sudo -u swift swift-ring-builder container.builder rebalance
+           chdir=/etc/swift
+  ignore_errors: yes
+
+- name: create object builder
+  command: sudo -u swift swift-ring-builder object.builder create 18 2 1
+           chdir=/etc/swift
+           creates=/etc/swift/object.builder
+
+- name: create object ring
+  command: sudo -u swift swift-ring-builder object.builder add r1z1-{{ management_ostore_network_address }}:6000R{{ management_ostore_network_address }}:6003/{{ item }} 100
+           chdir=/etc/swift
+  with_items: "{{ object_storage_devices }}"
+  ignore_errors: yes
+
+- name: rebalance object builder
+  command: sudo -u swift swift-ring-builder object.builder rebalance
+           chdir=/etc/swift
+  ignore_errors: yes
+
+- name: enable rsync in /etc/default
+  command: sed -i '/^RSYNC_ENABLE=/s/false/true/' /etc/default/rsync
+
+- name: ensure rsync service is started
+  service:
+    name: rsync
+    state: restarted
+    enabled: yes
+
+# - name: distribute builders with rsync
+#   shell: rsync -av /etc/swift/*.builder {{ hostvars[item]|find_ip(management_ostore_network) }}::config
+#   when: ansible_hostname != item
+#   with_items: groups['object-storage']
+
+# - name: distribute rings with rsync
+#   shell: rsync -av /etc/swift/*.ring.gz {{ hostvars[item]|find_ip(management_ostore_network) }}::config
+#   when: ansible_hostname != item
+#   with_items: groups['object-storage']
+
+- name: ensure services are started
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items: services

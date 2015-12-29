@@ -1,0 +1,3 @@
+---
+- include: keystone.yml
+- include: swift-controller.yml

@@ -1,0 +1,2 @@
+swift_hash_path_prefix: "{{ lookup('password', inventory_dir + '/creds/swift_hash_path_prefix') }}"
+swift_hash_path_suffix: "{{ lookup('password', inventory_dir + '/creds/swift_hash_path_suffix') }}"
